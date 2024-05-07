@@ -1,6 +1,7 @@
 package com.fylora
 
 import com.fylora.plugins.*
+import com.fylora.session.LoginManager
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -11,7 +12,8 @@ class ApplicationTest {
     @Test
     fun testRoot() = testApplication {
         application {
-            configureRouting()
+            val loginManager = LoginManager()
+            configureRouting(loginManager)
         }
         client.get("/").apply {
             assertEquals(HttpStatusCode.OK, status)

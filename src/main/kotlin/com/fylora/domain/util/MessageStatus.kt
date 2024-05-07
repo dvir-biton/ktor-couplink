@@ -1,4 +1,4 @@
-package com.fylora.couplink.util
+package com.fylora.domain.util
 
 sealed class MessageStatus(val status: String) {
     data object Sent : MessageStatus("sent")
