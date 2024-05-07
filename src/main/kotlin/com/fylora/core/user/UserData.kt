@@ -1,8 +1,8 @@
 package com.fylora.core.user
 
 import com.fylora.auth.data.serializer.ObjectIdSerializer
-import com.fylora.couplink.Event
-import com.fylora.couplink.Message
+import com.fylora.couplink.models.Event
+import com.fylora.couplink.models.Message
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
 
