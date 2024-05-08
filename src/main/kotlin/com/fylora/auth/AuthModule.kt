@@ -8,6 +8,8 @@ import com.fylora.auth.security.configureSecurity
 import com.fylora.auth.security.hashing.SHA256HashingService
 import com.fylora.auth.security.token.JwtTokenService
 import com.fylora.auth.security.token.TokenConfig
+import com.fylora.core.DatabaseSource.logDataSource
+import com.fylora.core.DatabaseSource.userDataSource
 import io.ktor.server.application.*
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -21,14 +23,14 @@ fun Application.authModule() {
         connectionString = "mongodb://localhost:27017"
     ).coroutine
         .getDatabase(usersDbName)
-    val userDataSource = MongoUserDataSource(usersDb)
+    userDataSource = MongoUserDataSource(usersDb)
 
     val logDbName = "log-database"
     val logDb = KMongo.createClient(
         connectionString = "mongodb://localhost:27017"
     ).coroutine
         .getDatabase(logDbName)
-    val logDataSource = MongoLogDataSource(logDb)
+    logDataSource = MongoLogDataSource(logDb)
 
     val tokenService = JwtTokenService()
     val tokenConfig = TokenConfig(

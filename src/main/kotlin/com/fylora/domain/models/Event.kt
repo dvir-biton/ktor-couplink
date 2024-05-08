@@ -1,4 +1,4 @@
-package com.fylora.couplink.models
+package com.fylora.domain.models
 
 import kotlinx.serialization.Serializable
 

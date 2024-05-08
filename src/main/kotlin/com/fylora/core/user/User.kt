@@ -12,7 +12,7 @@ data class User(
     val password: String,
     val salt: String,
     val role: String,
-    val data: UserData?,
+    val data: UserData,
 
     @Serializable(with = ObjectIdSerializer::class)
     @BsonId
