@@ -9,6 +9,7 @@ import com.fylora.auth.security.hashing.HashingService
 import com.fylora.core.handlers.ErrorResponse
 import com.fylora.core.logging.LogDataSource
 import com.fylora.core.user.User
+import com.fylora.core.user.UserData
 import com.fylora.core.user.UserDataSource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -62,7 +63,7 @@ fun Route.adminSignup(
             password = saltedHash.hash,
             salt = saltedHash.salt,
             role = UserRole.Admin.type,
-            data = null
+            data = UserData()
         )
 
         val wasAcknowledged = userDataSource.insertUser(user)

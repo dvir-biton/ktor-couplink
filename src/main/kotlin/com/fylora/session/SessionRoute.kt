@@ -9,6 +9,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.flow.consumeAsFlow
 import org.bson.types.ObjectId
 
 fun Route.session(
@@ -44,7 +45,13 @@ fun Route.session(
             }
 
             try {
-                // TODO: impl user connection state
+                incoming.consumeAsFlow().collect { frame ->
+                    if (frame is Frame.Text) {
+                        val requestBody = frame.readText()
+
+
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 logDataSource.addLog(
