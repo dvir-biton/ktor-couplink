@@ -7,12 +7,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.bson.types.ObjectId
 
-class MessageManager(
-    private val chatId: ObjectId
-) {
+class MessageManager {
     suspend fun send(
         message: Message,
-        to: OnlineUser
+        to: OnlineUser,
+        chatId: ObjectId
     ) {
         messageDataSource.save(chatId, message)
 
@@ -25,7 +24,7 @@ class MessageManager(
         )
     }
 
-    suspend fun getAllMessages(): List<Message> {
+    suspend fun getAllMessages(chatId: ObjectId): List<Message> {
         return messageDataSource.getAllMessages(chatId)?.messages ?: emptyList()
     }
 }

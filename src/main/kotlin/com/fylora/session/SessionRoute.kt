@@ -4,12 +4,15 @@ import com.fylora.auth.data.logging.Log
 import com.fylora.core.DatabaseSource.logDataSource
 import com.fylora.core.logging.util.LogLevel
 import com.fylora.domain.util.Result
+import com.fylora.session.model.Request
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.bson.types.ObjectId
 
 fun Route.session(
@@ -43,13 +46,26 @@ fun Route.session(
                 )
                 loginManager.disconnect(user ?: return@webSocket)
             }
+            val messageManager = MessageManager()
 
             try {
                 incoming.consumeAsFlow().collect { frame ->
                     if (frame is Frame.Text) {
                         val requestBody = frame.readText()
 
-
+                        when (val request = Json.decodeFromString<Request>(requestBody)) {
+                            is Request.ChatRequest -> {
+                                user.socket.send(
+                                    Frame.Text(
+                                        Json.encodeToString(
+                                            messageManager.getAllMessages(
+                                                ObjectId(request.chatId)
+                                            )
+                                        )
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             } catch (e: Exception) {
