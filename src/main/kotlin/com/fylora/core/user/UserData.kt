@@ -15,4 +15,6 @@ data class UserData(
     val dateHistory: List<Event> = emptyList(),
     val upcomingDates: List<Event> = emptyList(),
     val favoriteDates: List<Event> = emptyList(),
+
+    val chatIds: List<String> = emptyList()
 )

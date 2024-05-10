@@ -53,4 +53,8 @@ class LoginManager {
 
         return Result.Success("The user ${onlineUser.user.username} logged out successfully")
     }
+
+    fun getOnlineUser(username: String): OnlineUser? {
+        return onlineUsers.find { it.user.username == username }
+    }
 }

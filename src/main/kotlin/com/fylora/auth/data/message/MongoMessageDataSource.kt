@@ -20,7 +20,7 @@ class MongoMessageDataSource(
         ).wasAcknowledged()
     }
 
-    override suspend fun getAllMessages(chatId: ObjectId): Chat? {
+    override suspend fun getChatById(chatId: ObjectId): Chat? {
         return chats.findOne(Chat::id eq chatId)
     }
 }

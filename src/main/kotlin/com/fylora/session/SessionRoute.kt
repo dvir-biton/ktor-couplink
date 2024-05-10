@@ -58,11 +58,25 @@ fun Route.session(
                                 user.socket.send(
                                     Frame.Text(
                                         Json.encodeToString(
-                                            messageManager.getAllMessages(
+                                            messageManager.getChat(
                                                 ObjectId(request.chatId)
                                             )
                                         )
                                     )
+                                )
+                            }
+                            is Request.SendMessageRequest -> {
+                                val chat = messageManager.getChat(ObjectId(request.chatId))
+
+                                val onlineUsers = mutableListOf<OnlineUser?>()
+                                chat?.users?.forEach { username ->
+                                    onlineUsers.add(loginManager.getOnlineUser(username))
+                                }
+
+                                messageManager.send(
+                                    request.message,
+                                    onlineUsers,
+                                    ObjectId(request.chatId)
                                 )
                             }
                         }
