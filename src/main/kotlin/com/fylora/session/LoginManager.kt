@@ -5,6 +5,7 @@ import com.fylora.core.DatabaseSource.logDataSource
 import com.fylora.core.DatabaseSource.userDataSource
 import com.fylora.core.logging.util.LogLevel
 import com.fylora.domain.util.Result
+import com.fylora.session.model.OnlineUser
 import io.ktor.websocket.*
 import org.bson.types.ObjectId
 

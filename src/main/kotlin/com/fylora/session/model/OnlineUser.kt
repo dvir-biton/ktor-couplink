@@ -1,4 +1,4 @@
-package com.fylora.session
+package com.fylora.session.model
 
 import com.fylora.core.user.User
 import io.ktor.websocket.*

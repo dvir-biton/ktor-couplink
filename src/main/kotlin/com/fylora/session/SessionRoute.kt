@@ -4,6 +4,7 @@ import com.fylora.auth.data.logging.Log
 import com.fylora.core.DatabaseSource.logDataSource
 import com.fylora.core.logging.util.LogLevel
 import com.fylora.domain.util.Result
+import com.fylora.session.model.OnlineUser
 import com.fylora.session.model.Request
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
