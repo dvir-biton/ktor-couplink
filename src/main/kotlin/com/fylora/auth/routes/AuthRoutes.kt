@@ -71,11 +71,36 @@ fun Route.signUp(
             salt = saltedHash.salt,
             role = UserRole.User.type,
             data = UserData(
-                partnerId = request.userData.partnerId,
-                birthday = request.userData.birthday,
-                anniversary = request.userData.anniversary,
+                partnerId = request.partnerId,
+                birthday = request.birthday,
+                anniversary = request.anniversary,
             )
         )
+        if (request.partnerId != null) {
+            val partner = userDataSource.getUserById(request.partnerId)
+            if (partner == null) {
+                call.respond(
+                    HttpStatusCode.Conflict,
+                    message = ErrorResponse("The partner does not exist")
+                )
+                return@post
+            }
+            if (partner.data.partnerId == null) {
+                userDataSource.updateUser(
+                    partner.copy(
+                        data = partner.data.copy(
+                            partnerId = user.id
+                        )
+                    )
+                )
+            } else {
+                call.respond(
+                    HttpStatusCode.Conflict,
+                    message = ErrorResponse("The partner is already taken")
+                )
+                return@post
+            }
+        }
 
         val wasAcknowledged = userDataSource.insertUser(user)
         if(!wasAcknowledged) {

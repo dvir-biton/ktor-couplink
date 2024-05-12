@@ -1,11 +1,16 @@
 package com.fylora.auth.requests
 
-import com.fylora.core.user.UserData
+import com.fylora.auth.data.serializer.ObjectIdSerializer
 import kotlinx.serialization.Serializable
+import org.bson.types.ObjectId
 
 @Serializable
 data class SignupRequest(
     val username: String,
     val password: String,
-    val userData: UserData
+
+    @Serializable(with = ObjectIdSerializer::class)
+    val partnerId: ObjectId?,
+    val birthday: Long,
+    val anniversary: Long
 )
