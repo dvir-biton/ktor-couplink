@@ -1,19 +1,13 @@
 package com.fylora.auth.routes
 
-import com.fylora.core.user.User
-import com.fylora.core.user.UserData
-import com.fylora.core.user.UserDataSource
 import com.fylora.auth.data.user.UserRole
-import com.fylora.auth.requests.AuthRequest
-import com.fylora.auth.requests.AuthResponse
 import com.fylora.auth.requests.SignupRequest
 import com.fylora.auth.security.hashing.HashingService
-import com.fylora.auth.security.hashing.SaltedHash
-import com.fylora.auth.security.token.TokenClaim
-import com.fylora.auth.security.token.TokenConfig
-import com.fylora.auth.security.token.TokenService
+import com.fylora.core.DatabaseSource.userDataSource
 import com.fylora.core.handlers.ErrorResponse
 import com.fylora.core.handlers.InfoResponse
+import com.fylora.core.user.User
+import com.fylora.core.user.UserData
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -26,8 +20,7 @@ const val MAX_USERNAME_LENGTH = 24
 const val MIN_USERNAME_LENGTH = 3
 
 fun Route.signUp(
-    hashingService: HashingService,
-    userDataSource: UserDataSource
+    hashingService: HashingService
 ) {
     post("signup") {
         val request = call.receiveNullable<SignupRequest>() ?: kotlin.run {
@@ -112,62 +105,6 @@ fun Route.signUp(
         }
 
         call.respond(HttpStatusCode.OK)
-    }
-}
-
-fun Route.login(
-    hashingService: HashingService,
-    userDataSource: UserDataSource,
-    tokenService: TokenService,
-    tokenConfig: TokenConfig
-) {
-    post("login") {
-        val request = call.receiveNullable<AuthRequest>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest)
-            return@post
-        }
-
-        val user = userDataSource.getUserByUsername(request.username)
-        if(user == null) {
-            call.respond(
-                HttpStatusCode.Conflict,
-                ErrorResponse("Incorrect username or password")
-            )
-            return@post
-        }
-
-        val isValidPassword = hashingService.verify(
-            value = request.password,
-            saltedHash = SaltedHash(
-                hash = user.password,
-                salt = user.salt
-            )
-        )
-        if(!isValidPassword) {
-            call.respond(
-                HttpStatusCode.Conflict,
-                ErrorResponse("Incorrect username or password")
-            )
-            return@post
-        }
-
-        val token = tokenService.generate(
-            config = tokenConfig,
-            TokenClaim(
-                name = "userId",
-                value = user.id.toString()
-            ),
-            TokenClaim(
-                name = "username",
-                value = user.username
-            )
-        )
-        call.respond(
-            status = HttpStatusCode.OK,
-            message = AuthResponse(
-                token = token
-            )
-        )
     }
 }
 

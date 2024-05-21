@@ -4,9 +4,7 @@ import com.fylora.auth.authModule
 import com.fylora.auth.data.message.MongoMessageDataSource
 import com.fylora.core.DatabaseSource
 import com.fylora.plugins.configureMonitoring
-import com.fylora.plugins.configureRouting
 import com.fylora.plugins.configureSerialization
-import com.fylora.session.LoginManager
 import io.ktor.server.application.*
 import io.ktor.server.websocket.*
 import org.litote.kmongo.coroutine.coroutine
@@ -27,8 +25,6 @@ fun Application.module() {
         .getDatabase(chatsDbName)
     DatabaseSource.messageDataSource = MongoMessageDataSource(usersDb)
 
-    val loginManager = LoginManager()
-    configureRouting(loginManager)
     configureSerialization()
     configureMonitoring()
 }
